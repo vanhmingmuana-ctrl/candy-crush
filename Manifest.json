@@ -1,0 +1,9 @@
+Manifest.json
+{
+  "name": "Candy Crush",
+  "short_name": "Candy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff69b4"
+}

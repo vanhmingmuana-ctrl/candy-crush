@@ -1,0 +1,78 @@
+Candy crush html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Patea's Candy Crush - Level 1000</title>
+<style>
+body {display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a2e; margin:0; font-family:sans-serif;}
+.game {text-align:center;}
+#board {display:grid; grid-template-columns:repeat(8, 45px); gap:3px; margin:10px auto;}
+.cell {width:45px; height:45px; border-radius:12px; cursor:pointer; transition:0.2s;}
+.cell:active {transform:scale(0.9);}
+.info {color:white; font-size:18px; margin:5px;}
+button {padding:8px 15px; margin-top:10px; border:none; border-radius:8px; background:#e94560; color:white; font-size:16px; cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="game">
+  <div class="info">Level: <span id="level">1</span></div>
+  <div class="info">Score: <span id="score">0</span> / <span id="target">100</span></div>
+  <div class="info">Moves: <span id="moves">20</span></div>
+  <div id="board"></div>
+  <button onclick="nextLevel()" id="nextBtn" style="display:none;">Next Level</button>
+</div>
+<script>
+const colors = ['#FF6B6B','#4ECDC4','#FFE66D','#95E1D3','#A8E6CF','#FF8B94'];
+let board=[], score=0, moves=20, level=1, target=100, selected=null;
+
+function init(){
+  board=[]; score=0;
+  moves = 22 + Math.floor(level/2);
+  target = 100 + level*40;
+  for(let i=0;i<64;i++) board.push(colors[Math.floor(Math.random()*colors.length)]);
+  document.getElementById('level').innerText=level;
+  document.getElementById('target').innerText=target;
+  document.getElementById('moves').innerText=moves;
+  document.getElementById('score').innerText=score;
+  document.getElementById('nextBtn').style.display='none';
+  draw();
+}
+
+function draw(){
+  const b=document.getElementById('board'); b.innerHTML='';
+  board.forEach((c,i)=>{
+    const d=document.createElement('div');
+    d.className='cell'; d.style.background=c;
+    d.onclick=()=>swap(i); b.appendChild(d);
+  });
+}
+
+function swap(i){
+  if(selected===null){selected=i; return;}
+  if(moves<=0){alert('Moves a zo! Level '+level+' atang i tan leh ang'); init(); return;}
+  [board[i],board[selected]]=[board[selected],board[i]];
+  moves--; checkMatch(); selected=null;
+}
+
+function checkMatch(){
+  let matched=false;
+  for(let i=0;i<64;i++){
+    if(i%8<6 && board[i]===board[i+1] && board[i]===board[i+2]){score+=10; matched=true;}
+    if(i<48 && board[i]===board[i+8] && board[i]===board[i+16]){score+=10; matched=true;}
+  }
+  document.getElementById('score').innerText=score;
+  document.getElementById('moves').innerText=moves;
+  if(score>=target){document.getElementById('nextBtn').style.display='inline-block';}
+  else if(moves<=0 && score<target){setTimeout(()=>{alert('Game Over!'); init();},300);}
+  else draw();
+}
+
+function nextLevel(){
+  if(level<1000){level++; init();}
+  else{alert('Patea, Level 1000 i zo vek! I legend lutuk!'); level=1; init();}
+}
+
+init();
+</script>
+</body>
+</html>
